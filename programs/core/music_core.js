@@ -81,7 +81,8 @@ class Music_core{
         this.play(data.interaction.guildId)
         return 'sus'
     }
-    convert_to_data(){
+    
+    keyword_confirm(keyword){
         
     }
 }

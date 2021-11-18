@@ -1,5 +1,5 @@
 const fs = require("fs")
-const { getURLVideoID } = require("ytdl-core")
+
 /*
 {
     guildId:"",
@@ -11,8 +11,8 @@ const { getURLVideoID } = require("ytdl-core")
 }
 */
 function put_in(data){
-    guildId=data.guildId
-    jsonpath='./songlist/' + guildId + '.json'
+    let guildId=data.guildId
+    let jsonpath='./songlist/' + guildId + '.json'
     if (! fs.existsSync(jsonpath)) fs.writeFileSync(jsonpath,'[]')
     songlist=JSON.parse(fs.readFileSync(jsonpath))
     if (data) songlist.push(data)
@@ -20,14 +20,14 @@ function put_in(data){
 }
 
 function del_pos(guildId,pos=0) {
-    jsonpath='./songlist/' + guildId + '.json'
-    songlist=JSON.parse(fs.readFileSync(jsonpath))
+    let jsonpath='./songlist/' + guildId + '.json'
+    let songlist=JSON.parse(fs.readFileSync(jsonpath))
     if (pos<songlist.length) songlist.splice(pos,1)
     fs.writeFileSync(jsonpath,JSON.stringify(songlist,null,4))
 }
 
 function get_pos(guildId,pos=0) {
-    jsonpath='./songlist/' + guildId + '.json'
+    let jsonpath='./songlist/' + guildId + '.json'
     return JSON.parse(fs.readFileSync(jsonpath))[pos]
 }
 
