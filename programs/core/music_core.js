@@ -1,5 +1,6 @@
 const { joinVoiceChannel, getVoiceConnection, createAudioPlayer, createAudioResource ,AudioPlayerStatus} = require("@discordjs/voice");
 const ytdl = require('ytdl-core');
+const yt = require('youtube-search-without-api-key');
 const {put_in,del_pos,get_pos, get_length ,swap_pos} = require('./../call/iojson.js')
 
 song_list=[]
@@ -35,7 +36,8 @@ class Music_core{
         if (this.players[guildId][0].state.status!='playing'){
             if (this.players[guildId][0].state.status=='paused') this.players[guildId][0].unpause()
             else{
-                const resource = createAudioResource(get_pos(guildId).path)
+                let resource = createAudioResource(get_pos(guildId).path)
+                resource.volume =get_pos(guildId).volume
                 connection.subscribe(this.players[guildId][0])
                 this.players[guildId][0].play(resource)
             }
@@ -69,23 +71,68 @@ class Music_core{
             }|| null,
             insert:false
         } */
-        let info = await ytdl.getInfo(data.interaction.options.getString('key'))
-        let audioFormats = ytdl.filterFormats(info.formats, 'audioonly');
-        var songinfo = {
-            guildId:data.interaction.guildId,
-            insert:false,
-            channelId:data.interaction.channelId,
-            path:audioFormats[0].url,
-            type:"",
-            volume:0.3,
-        };
+        let keyfirm = await this.keyword_confirm(data.interaction.options.getString('key'))
+        if (keyfirm.type=='url'||keyfirm.type=='keyword'){
+            let audioFormats = ytdl.filterFormats(keyfirm.info.formats, 'audioonly');
+            var songinfo = {
+                guildId:data.interaction.guildId,
+                insert:false,
+                channelId:data.interaction.channelId,
+                path:audioFormats[0].url,
+                type:"",
+                volume:0.3,
+            };
+        }
+        // let info = await ytdl.getInfo(data.interaction.options.getString('key'))
+        // let audioFormats = ytdl.filterFormats(info.formats, 'audioonly');
+        
         put_in(songinfo)
         this.play(data.interaction.guildId)
         return 'sus'
     }
     
-    keyword_confirm(keyword){
-        
+    async keyword_confirm(keyword){
+        /* data{
+            info:ytdl||playlist
+            type:"list","keyword","url"
+        }
+        */
+        let data,info={},type,yurl;
+        try {yurl = new URL(keyword)}
+        catch (error) {yurl={}}
+        if (yurl.hostname == 'www.youtube.com'){
+            let list_id=yurl.searchParams.get('list')
+            if (yurl.pathname=='/playlist' || list_id){
+                console.log('wwwlist')
+                type="list"
+            }
+            else{
+                console.log('www')
+                info = await ytdl.getInfo(keyword)
+                type="url"
+            }
+        }
+        else if (yurl.hostname == 'youtu.be'){
+            let list_id=yurl.searchParams.get('list')
+            if (list_id) {
+                console.log('list')
+                type="list"
+            }
+            else{
+                console.log('nw')
+                info = await ytdl.getInfo(yurl)
+                type="url"
+            }
+        }
+        else{
+            type="keyword"
+            let search=await yt.search(keyword)
+            info = await ytdl.getInfo(search[0].url)
+        }
+        return {
+            info:info,
+            type:type
+        }
     }
 }
 

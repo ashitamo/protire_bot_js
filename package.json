@@ -21,7 +21,6 @@
     "discord.js": "^13.3.1",
     "libsodium-wrappers": "^0.7.9",
     "tweetnacl": "^1.0.3",
-    "youtube-search-without-api-key": "^1.0.6",
     "ytdl-core": "^4.9.1"
   }
 }
