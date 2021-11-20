@@ -28,8 +28,8 @@ function del_pos(guildId,pos=0) {
 
 function swap_pos(guildId,pos=0,anopos=0) {
     let jsonpath='./songlist/' + guildId + '.json'
-    songlist=JSON.parse(fs.readFileSync(jsonpath))
-    anopos =  anopos ? anopos:songlist.length-1;
+    let songlist=JSON.parse(fs.readFileSync(jsonpath))
+    let anopos =  anopos ? anopos:songlist.length-1;
     [songlist[anopos],songlist[pos]] = [songlist[pos],songlist[anopos]]
     fs.writeFileSync(jsonpath,JSON.stringify(songlist,null,4))
 }
@@ -40,6 +40,7 @@ function get_pos(guildId,pos=0) {
 }
 
 function get_length(guildId) {
+    let jsonpath='./songlist/' + guildId + '.json'
     return JSON.parse(fs.readFileSync(jsonpath)).length
 }
 
