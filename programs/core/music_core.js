@@ -1,6 +1,6 @@
 const { joinVoiceChannel, getVoiceConnection, createAudioPlayer, createAudioResource ,AudioPlayerStatus} = require("@discordjs/voice");
 const ytdl = require('ytdl-core');
-const {put_in,del_pos,get_pos, get_length} = require('./../call/iojson.js')
+const {put_in,del_pos,get_pos, get_length ,swap_pos} = require('./../call/iojson.js')
 
 song_list=[]
 class Music_core{
@@ -11,6 +11,7 @@ class Music_core{
         }
          */
         this.players={}
+        this.cycle=false
     }
 
     new_guild(guildId){
@@ -51,7 +52,8 @@ class Music_core{
     next(guildId){
         if (this.players[guildId][0]) this.players[guildId][0].stop()
         this.players[guildId].shift()
-        del_pos(guildId)
+        if (this.cycle) swap_pos(guildId)
+        else del_pos(guildId)
         if (get_length(guildId)) this.play(guildId)
     }
 

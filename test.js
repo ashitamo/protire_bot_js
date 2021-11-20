@@ -8,8 +8,3 @@
 // name()
 const {put_in,del_pos} = require('./programs/call/iojson.js')
 
-del_pos("530743496513028116")
-
-a=[1,2,3]
-a.splice(1,1)
-console.log(a)
