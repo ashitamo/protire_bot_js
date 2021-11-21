@@ -1,6 +1,6 @@
 const { joinVoiceChannel, getVoiceConnection, createAudioPlayer, createAudioResource ,AudioPlayerStatus} = require("@discordjs/voice");
 const ytdl = require('ytdl-core');
-const yt = require('youtube-search-without-api-key');
+const ytsearch =require('youtube-search-api');
 const {put_in,del_pos,get_pos, get_length ,swap_pos} = require('./../call/iojson.js')
 
 song_list=[]
@@ -97,7 +97,7 @@ class Music_core{
             type:"list","keyword","url"
         }
         */
-        let data,info={},type,yurl;
+        let info={},type,yurl;
         try {yurl = new URL(keyword)}
         catch (error) {yurl={}}
         if (yurl.hostname == 'www.youtube.com'){
@@ -126,13 +126,10 @@ class Music_core{
         }
         else{
             type="keyword"
-            let search=await yt.search(keyword)
-            info = await ytdl.getInfo(search[0].url)
+            let search = await ytsearch.GetListByKeyword(keyword,false,1)
+            info = await ytdl.getInfo(search.items[0].id)
         }
-        return {
-            info:info,
-            type:type
-        }
+        return {info:info,type:type}
     }
 }
 
