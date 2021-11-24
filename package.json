@@ -1,13 +1,14 @@
 {
-  "name": "simplebot",
+  "name": "protire_bot",
   "version": "1.0.0",
-  "description": "",
+  "description": "2021/11/23 speech_musicore",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "deploy": "node deployCommand.js",
     "iojson": "node ./programs/call/iojson.js",
-    "tset": "node test.js"
+    "tset": "node test.js",
+    "speech_arg": "node ./programs/call/speech_arg.js"
   },
   "keywords": [],
   "author": "",

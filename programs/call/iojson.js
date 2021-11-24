@@ -43,11 +43,16 @@ function get_length(guildId) {
     let jsonpath='./songlist/' + guildId + '.json'
     return JSON.parse(fs.readFileSync(jsonpath)).length
 }
+function clear_songlist(guildId) {
+    let jsonpath='./songlist/' + guildId + '.json'
+    fs.writeFileSync(jsonpath,JSON.stringify([],null,4))
+}
 
 module.exports={
     put_in:put_in,
     del_pos:del_pos,
     swap_pos:swap_pos,
     get_pos:get_pos,
-    get_length:get_length
+    get_length:get_length,
+    clear_songlist:clear_songlist
 }

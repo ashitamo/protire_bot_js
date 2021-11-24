@@ -53,8 +53,14 @@ module.exports=[
                 interaction:interaction,
                 insert:false
             }
-            let m = await Music.main(info)
-            await interaction.reply(m)
+            if (! interaction.keyword)info.keyword=interaction.options.getString('key')
+            else info.keyword=interaction.keyword
+            let replymsg = await interaction.reply('sus')
+            if (replymsg) interaction.editReply=async (msg)=>{
+                    await replymsg.edit(msg)
+                }
+            let result = await Music.main(info)
+            await interaction.editReply(result)
         }
     },
     {
@@ -66,7 +72,33 @@ module.exports=[
             await interaction.reply('skip');
         },
     },
-    
+    {
+        data: new SlashCommandBuilder()
+		.setName('stop')
+		.setDescription('Stop music'),
+        async execute(interaction) {
+            Music.stop(interaction.guildId)
+            await interaction.reply('stop');
+        },
+    },
+    {
+        data: new SlashCommandBuilder()
+		.setName('pause')
+		.setDescription('Pause music'),
+        async execute(interaction) {
+            Music.pause(interaction.guildId)
+            await interaction.reply('Pause');
+        },
+    },
+    {
+        data: new SlashCommandBuilder()
+		.setName('resume')
+		.setDescription('Unpause music'),
+        async execute(interaction) {
+            Music.resume(interaction.guildId)
+            await interaction.reply('Resume');
+        },
+    },
 ]
 
 // module.exports={
