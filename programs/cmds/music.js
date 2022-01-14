@@ -53,7 +53,9 @@ module.exports=[
                 interaction:interaction,
                 insert:false
             }
-            if (! interaction.keyword)info.keyword=interaction.options.getString('key')
+            if (! interaction.keyword){
+                info.keyword=interaction.options.getString('key')
+            }
             else info.keyword=interaction.keyword
             let replymsg = await interaction.reply('sus')
             if (replymsg) interaction.editReply=async (msg)=>{

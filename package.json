@@ -23,6 +23,6 @@
     "libsodium-wrappers": "^0.7.9",
     "tweetnacl": "^1.0.3",
     "youtube-search-api": "^1.0.11",
-    "ytdl-core": "^4.9.1"
+    "ytdl-core": "^4.10.0"
   }
 }

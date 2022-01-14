@@ -1,4 +1,5 @@
 
+//我好沒用 好想脫單 一蘭拉麵 自我安慰 
 const keywordlist={
     stop:{
         kw:["停止播放","停下來","停止","stop"],
