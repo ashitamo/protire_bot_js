@@ -156,8 +156,6 @@ class Music_core{
         /*
         song_info={
             url
-            |
-
         }
          */
         /*data={
