@@ -68,6 +68,7 @@ class Music_core{
                 resource.volume.setVolume(0.07)
                 connection.subscribe(this.players[guildId][0])
                 this.players[guildId][0].play(resource)
+                console.log('play:',get_pos(guildId).title)
             }
         }
         if (! this.players[guildId][0].ranon){
@@ -103,7 +104,7 @@ class Music_core{
     async keyword_confirm(keyword){
         /* data{
             url:yt_url||playlist
-            is_playlist:bool
+            type:
         }
         */
         let type,yurl;
@@ -112,26 +113,20 @@ class Music_core{
         if (yurl.hostname == 'www.youtube.com' || yurl.hostname=='youtube.com'){
             let list_id=yurl.searchParams.get('list')
             if (yurl.pathname=='/playlist' || list_id){
-                console.log('comlist')
                 yurl=yurl.href
                 type="list"
             }
             else{
-                console.log('www')
-                //info = await ytdl.getInfo(keyword)
                 type="url"
             }
         }
         else if (yurl.hostname == 'youtu.be'){
             let list_id=yurl.searchParams.get('list')
             if (list_id) {
-                console.log('list')
                 yurl=yurl.href
                 type="list"
             }
             else{
-                console.log('nw')
-                //info = await ytdl.getInfo(yurl)
                 type="url"
             }
         }
@@ -139,18 +134,20 @@ class Music_core{
             type="keyword"
             let search = await ytsearch.GetListByKeyword(keyword,false,1)
             yurl='https://www.youtube.com/watch?v='+search.items[0].id
-            //info = await ytdl.getInfo(search.items[0].id)
         }
         return {url:yurl,type:type}
     }
 
     async pre_procces(songinfo){
         let info = await ytdl.getInfo(songinfo.url)
-        let audioFormats = ytdl.filterFormats(info.formats, 'audioonly');
-        audioFormats = ytdl.filterFormats(audioFormats,(format)=>format.audioBitrate<=128)
+        if (info.player_response.streamingData.hlsManifestUrl) songinfo.path=info.player_response.streamingData.hlsManifestUrl
+        else{
+            let audioFormats = ytdl.filterFormats(info.formats, 'audioonly');
+            audioFormats = ytdl.filterFormats(audioFormats,(format)=>format.audioBitrate<=128)
+            songinfo.path = audioFormats[0].url
+        }
         songinfo.title = info.videoDetails.title
         songinfo.prepces_bool = true
-        songinfo.path = audioFormats[0].url
         return songinfo
     }
     
@@ -197,20 +194,22 @@ class Music_core{
                     prepces_bool:false,
                     type:"yt"
                 }
-                if (playlist.indexOf(i)==0){
-                    setTimeout(() => {
-                        put_in(songinfo)
-                        this.play(guildId)
-                    }, 0);
-                }
-                else list.push(songinfo)
+                // if (playlist.indexOf(i)==0){
+                //     setTimeout(() => {
+                //         put_in(songinfo)
+                //         this.play(guildId)
+                //     }, 0);
+                // }
+                // else list.push(songinfo)
+                list.push(songinfo)
             }
             list.guildId=guildId
             put_in(list)
         }
         await this.play(guildId)
         console.log('[time]:',Date.now()-firsttime,'ms')
-        if (keyfirm.type!='list') return songinfo.title
+        if (keyfirm.type=='list') return keyfirm.url
+        else return songinfo.title
     }
     
     skip(guildId){

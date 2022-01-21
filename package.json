@@ -7,7 +7,7 @@
     "start": "node index.js",
     "deploy": "node deployCommand.js",
     "iojson": "node ./programs/call/iojson.js",
-    "tset": "node test.js",
+    "test": "node test.js",
     "speech_arg": "node ./programs/call/speech_arg.js"
   },
   "keywords": [],
